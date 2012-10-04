@@ -200,12 +200,19 @@ sub register_ws{
 			$outstr = `ssh -o StrictHostKeyChecking=no root\@$this_clc_ip \"$ENV{'EUCALYPTUS'}/usr/sbin/euca_conf --register-walrus --partition WALRUS00 --component $comp_name --host $ws_ip\"`;
 
 			print $outstr;
-			if( $outstr =~ /RESPONSE\s+true/ ){
-				print "\nRegistered Walrus $ws_ip successfully !\n\n";
-			}else{
+#			if( $outstr =~ /RESPONSE\s+true/ ){
+#				print "\nRegistered Walrus $ws_ip successfully !\n\n";
+#			}else{
+#				print "\n[TEST_REPORT]\tFAILED to Register Walrus $ws_ip !!!\n\n";
+#				$is_error = 1;
+#				exit(1);
+#			};
+
+			### 3.2 CHANGE + BACKWARD COMPATIBLE	100412 
+			my $rc  = $? >> 8;
+			if( $outstr =~ /RESPONSE\s+false/ || $rc > 0 ){
 				print "\n[TEST_REPORT]\tFAILED to Register Walrus $ws_ip !!!\n\n";
 				$is_error = 1;
-#				exit(1);
 			};
 		};
 	};
@@ -246,13 +253,21 @@ sub register_arbitrator{
            $outstr = `ssh -o StrictHostKeyChecking=no root\@$this_clc_ip \"$ENV{'EUCALYPTUS'}/usr/sbin/euca_conf --register-arbitrator --partition $arb_partition --component $comp_name --host $arb_ip\"`;
 
            print $outstr;
-           if( $outstr =~ /RESPONSE\s+true/ ){
-             print "\nRegistered Arbitrator $arb_ip successfully !\n\n";
-           }else{
-             print "\n[TEST_REPORT]\tFAILED to Register Arbitrator $arb_ip !!!\n\n";
-             $is_error = 1;
+#           if( $outstr =~ /RESPONSE\s+true/ ){
+#             print "\nRegistered Arbitrator $arb_ip successfully !\n\n";
+#           }else{
+#             print "\n[TEST_REPORT]\tFAILED to Register Arbitrator $arb_ip !!!\n\n";
+#             $is_error = 1;
 #                              exit(1);
-           };
+#           };
+
+		### 3.2 CHANGE + BACKWARD COMPATIBLE	100412 
+		my $rc  = $? >> 8;
+		if( $outstr =~ /RESPONSE\s+false/ || $rc > 0 ){
+			print "\n[TEST_REPORT]\tFAILED to Register Arbitrator $arb_ip !!!\n\n";
+			$is_error = 1;
+		};
+
          };
        };
        return 0;
@@ -285,13 +300,22 @@ sub register_cc{
 			$outstr = `ssh -o StrictHostKeyChecking=no root\@$this_clc_ip \"$ENV{'EUCALYPTUS'}/usr/sbin/euca_conf --register-cluster --partition PARTI$group --component $comp_name --host $my_cc_ip\"`;
 
 			print $outstr;
-			if( $outstr =~ /RESPONSE\s+true/ ){
-	        		print "\nRegistered Cluster $my_cc_ip successfully !\n\n";
-			}else{
-	        		print "\n[TEST_REPORT]\tFAILED to Register Cluster $my_cc_ip !!!\n\n";
-				$is_error = 1;
+
+#			if( $outstr =~ /RESPONSE\s+true/ ){
+#	        		print "\nRegistered Cluster $my_cc_ip successfully !\n\n";
+#			}else{
+#	        		print "\n[TEST_REPORT]\tFAILED to Register Cluster $my_cc_ip !!!\n\n";
+#				$is_error = 1;
 #	        		exit(1);
+#			};
+
+			### 3.2 CHANGE + BACKWARD COMPATIBLE	100412 
+			my $rc  = $? >> 8;
+			if( $outstr =~ /RESPONSE\s+false/ || $rc > 0 ){
+				print "\n[TEST_REPORT]\tFAILED to Register Cluster $my_cc_ip !!!\n\n";
+				$is_error = 1;
 			};
+
 
 #			if( $is_nc_registered == 0 ){
 				register_nc($my_cc_ip, $group);
@@ -325,13 +349,22 @@ sub register_nc{
 		$outstr = `ssh -o StrictHostKeyChecking=no root\@$my_cc_ip \"$ENV{'EUCALYPTUS'}/usr/sbin/euca_conf --register-nodes $my_nc_ip\"`;
 
 	        print $outstr;
-	        if( $outstr =~ /\.\.\.done/ ){
-			print "\nRegistered Node $my_nc_ip successfully !\n\n";
-	        }else{
-#	                print "\n[TEST_REPORT]\tFAILED to Register Node $my_nc_ip !!!\n\n";
-#			$is_error = 1;
-			print "\nNO RESPONSE??\n\n";
-	        };
+
+#	        if( $outstr =~ /\.\.\.done/ ){
+#			print "\nRegistered Node $my_nc_ip successfully !\n\n";
+#	        }else{
+###	                print "\n[TEST_REPORT]\tFAILED to Register Node $my_nc_ip !!!\n\n";
+###			$is_error = 1;
+#			print "\nNO RESPONSE??\n\n";
+#	        };
+
+		### 3.2 CHANGE + BACKWARD COMPATIBLE	100412 
+		my $rc  = $? >> 8;
+		if( $outstr =~ /RESPONSE\s+false/ || $rc > 0 ){
+			print "\n[TEST_REPORT]\tFAILED to Register Node $my_nc_ip !!!\n\n";
+			$is_error = 1;
+		};
+
 		sleep(30);
 	};
 	return 0;
@@ -360,13 +393,22 @@ sub register_sc{
 			$outstr = `ssh -o StrictHostKeyChecking=no root\@$this_clc_ip \"$ENV{'EUCALYPTUS'}/usr/sbin/euca_conf --register-sc --partition PARTI$group --component $comp_name --host $my_sc_ip\"`;
 
 			print $outstr;
-        		if( $outstr =~ /RESPONSE\s+true/ ){
-                		print "\nRegistered StorageController $my_sc_ip successfully !\n\n";
-        		}else{
-                		print "\n[TEST_REPORT]\tFAILED to Register StorageController $my_sc_ip !!!\n\n";
+
+#        		if( $outstr =~ /RESPONSE\s+true/ ){
+#                		print "\nRegistered StorageController $my_sc_ip successfully !\n\n";
+#        		}else{
+#                		print "\n[TEST_REPORT]\tFAILED to Register StorageController $my_sc_ip !!!\n\n";
+#				$is_error = 1;
+###                		exit(1);
+#        		};
+
+			### 3.2 CHANGE + BACKWARD COMPATIBLE	100412 
+			my $rc  = $? >> 8;
+			if( $outstr =~ /RESPONSE\s+false/ || $rc > 0 ){
+				print "\n[TEST_REPORT]\tFAILED to Register StorageController $my_sc_ip !!!\n\n";
 				$is_error = 1;
-#                		exit(1);
-        		};
+			};
+
 		};
 	};
 	return 0;
@@ -393,13 +435,22 @@ sub register_vmbroker{
 			$outstr = `ssh -o StrictHostKeyChecking=no root\@$this_clc_ip \"$ENV{'EUCALYPTUS'}/usr/sbin/euca_conf --register-vmwarebroker PARTI$group $my_vb_ip\"`;
 
 			print $outstr;
-        		if( $outstr =~ /RESPONSE\s+true/ ){
-                		print "\nRegistered VmwareBroker $my_vb_ip successfully !\n\n";
-        		}else{
-                		print "\n[TEST_REPORT]\tFAILED to Register VmwareBroker $my_vb_ip !!!\n\n";
+
+#        		if( $outstr =~ /RESPONSE\s+true/ ){
+#                		print "\nRegistered VmwareBroker $my_vb_ip successfully !\n\n";
+#        		}else{
+#                		print "\n[TEST_REPORT]\tFAILED to Register VmwareBroker $my_vb_ip !!!\n\n";
+#				$is_error = 1;
+###				exit(1);
+#        		};
+
+			### 3.2 CHANGE + BACKWARD COMPATIBLE	100412 
+			my $rc  = $? >> 8;
+			if( $outstr =~ /RESPONSE\s+false/ || $rc > 0 ){
+				print "\n[TEST_REPORT]\tFAILED to Register VmwareBroker $my_vb_ip !!!\n\n";
 				$is_error = 1;
-#				exit(1);
-        		};
+			};
+
 			sleep(30);
 		};
 	};
