@@ -1,3 +1,25 @@
+
+register_euca_components
+========================
+
+## Description
+
+Register Eucalyptus components
+
+## Procedure
+
+1. Check for multiple cluster config
+2. Get the admin credentials from CLC
+3. Register walrus with CLC IP
+4. Wait 3 seconds
+5. Register CC as CLC IP
+6. Register SC as CLC IP
+7. Register any VMbroker group on the CLC 
+8. Report status of registration
+
+
+<hr><hr><hr>
+
 # Eucalyptus Testunit Framework
 
 Eucalyptus Testunit Framework is designed to run a list of test scripts written by Eucalyptus developers.
